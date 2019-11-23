@@ -80,13 +80,24 @@ const RootQuery = new GraphQLObjectType({
        type: UserType,
        args: {
          firstName: { type: new GraphQLNonNull(GraphQLString) },
-         age: { type: new GraphQLNonNull(GraphQLInt) },
+         age: { type: GraphQLInt },
          companyId: { type: GraphQLString }
        },
        async resolve(parentValue, { firstName, age }) {
         const res = await axios.post('http://localhost:3000/users', { firstName, age });
         return res.data;
        } 
+     },
+
+     deleteUser: {
+       type: UserType,
+       args: {
+         id: { type: new GraphQLNonNull(GraphQLString) }
+       },
+       async resolve(parentValue, args) {
+         const res = await axios.delete(`http://localhost:3000/users/${args.id}`);
+         return res.data;
+       }
      }
    }
  })
